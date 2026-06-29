@@ -1,15 +1,21 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Riyadh Metro Smart Mobility API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: stations
+    description: Station operations
+  - name: trips
+    description: Trip planning operations
+  - name: auth
+    description: Authentication operations
+
 paths:
   /healthz:
     get:
@@ -24,6 +30,234 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /stations:
+    get:
+      operationId: listStations
+      tags: [stations]
+      summary: List all stations
+      description: Returns all metro stations across all lines
+      responses:
+        "200":
+          description: Station list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Station"
+
+  /stations/lines:
+    get:
+      operationId: listLines
+      tags: [stations]
+      summary: List stations grouped by line
+      description: Returns stations organized by metro line
+      responses:
+        "200":
+          description: Lines with their stations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MetroLine"
+
+  /stations/{id}:
+    get:
+      operationId: getStation
+      tags: [stations]
+      summary: Get station details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          description: Station details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StationDetail"
+        "404":
+          description: Station not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /trips/plan:
+    post:
+      operationId: planTrip
+      tags: [trips]
+      summary: Plan a trip between two stations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TripPlanInput"
+      responses:
+        "200":
+          description: Trip plan result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TripPlan"
+        "400":
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /trips/saved:
+    get:
+      operationId: listSavedTrips
+      tags: [trips]
+      summary: Get saved trips for current user
+      responses:
+        "200":
+          description: Saved trips
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/SavedTrip"
+    post:
+      operationId: saveTrip
+      tags: [trips]
+      summary: Save a trip
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SavedTripInput"
+      responses:
+        "201":
+          description: Saved trip
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SavedTrip"
+
+  /trips/saved/{id}:
+    delete:
+      operationId: deleteSavedTrip
+      tags: [trips]
+      summary: Delete a saved trip
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: Deleted
+
+  /trips/network-summary:
+    get:
+      operationId: getNetworkSummary
+      tags: [trips]
+      summary: Get metro network summary stats
+      description: Live-style aggregated stats for the network dashboard
+      responses:
+        "200":
+          description: Network summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/NetworkSummary"
+
+  /auth/signup:
+    post:
+      operationId: signup
+      tags: [auth]
+      summary: Sign up a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/SignupInput"
+      responses:
+        "201":
+          description: Created user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+        "409":
+          description: Email already in use
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/login:
+    post:
+      operationId: login
+      tags: [auth]
+      summary: Log in
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginInput"
+      responses:
+        "200":
+          description: Logged in user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /auth/logout:
+    post:
+      operationId: logout
+      tags: [auth]
+      summary: Log out
+      responses:
+        "204":
+          description: Logged out
+
+  /auth/me:
+    get:
+      operationId: getMe
+      tags: [auth]
+      summary: Get current user
+      responses:
+        "200":
+          description: Current user
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuthUser"
+        "401":
+          description: Unauthenticated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +268,251 @@ components:
       required:
         - status
 
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
+
+    Station:
+      type: object
+      required: [id, name, nameAr, lineId, lineNumber, lineName, lineColor, isInterchange, interchangeLines, order]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        nameAr:
+          type: string
+        lineId:
+          type: string
+        lineNumber:
+          type: integer
+        lineName:
+          type: string
+        lineColor:
+          type: string
+        isInterchange:
+          type: boolean
+        interchangeLines:
+          type: array
+          items:
+            type: string
+        order:
+          type: integer
+
+    MetroLine:
+      type: object
+      required: [id, number, name, nameAr, color, stations, totalStations]
+      properties:
+        id:
+          type: string
+        number:
+          type: integer
+        name:
+          type: string
+        nameAr:
+          type: string
+        color:
+          type: string
+        stations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Station"
+        totalStations:
+          type: integer
+
+    StationDetail:
+      type: object
+      required: [id, name, nameAr, lineId, lineNumber, lineName, lineColor, isInterchange, interchangeLines, order, crowdLevel, nextTrains, amenities]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        nameAr:
+          type: string
+        lineId:
+          type: string
+        lineNumber:
+          type: integer
+        lineName:
+          type: string
+        lineColor:
+          type: string
+        isInterchange:
+          type: boolean
+        interchangeLines:
+          type: array
+          items:
+            type: string
+        order:
+          type: integer
+        crowdLevel:
+          type: string
+          enum: [low, moderate, high]
+        nextTrains:
+          type: array
+          items:
+            $ref: "#/components/schemas/TrainArrival"
+        amenities:
+          type: array
+          items:
+            type: string
+
+    TrainArrival:
+      type: object
+      required: [direction, minutesUntil]
+      properties:
+        direction:
+          type: string
+        minutesUntil:
+          type: integer
+
+    TripPlanInput:
+      type: object
+      required: [originId, destinationId]
+      properties:
+        originId:
+          type: string
+        destinationId:
+          type: string
+        preferFewer:
+          type: boolean
+
+    TripPlan:
+      type: object
+      required: [origin, destination, totalDuration, totalStops, fare, steps, crowdLevel, note]
+      properties:
+        origin:
+          $ref: "#/components/schemas/Station"
+        destination:
+          $ref: "#/components/schemas/Station"
+        totalDuration:
+          type: integer
+          description: Duration in minutes (simulated)
+        totalStops:
+          type: integer
+        fare:
+          type: number
+          description: Fare in SAR
+        steps:
+          type: array
+          items:
+            $ref: "#/components/schemas/TripStep"
+        crowdLevel:
+          type: string
+          enum: [low, moderate, high]
+        note:
+          type: string
+          description: Simulation note
+
+    TripStep:
+      type: object
+      required: [lineId, lineName, lineColor, lineNumber, boardAt, alightAt, stops, duration]
+      properties:
+        lineId:
+          type: string
+        lineName:
+          type: string
+        lineColor:
+          type: string
+        lineNumber:
+          type: integer
+        boardAt:
+          type: string
+        alightAt:
+          type: string
+        stops:
+          type: integer
+        duration:
+          type: integer
+
+    SavedTripInput:
+      type: object
+      required: [originId, destinationId, originName, destinationName]
+      properties:
+        originId:
+          type: string
+        destinationId:
+          type: string
+        originName:
+          type: string
+        destinationName:
+          type: string
+
+    SavedTrip:
+      type: object
+      required: [id, originId, destinationId, originName, destinationName, savedAt, userId]
+      properties:
+        id:
+          type: string
+        originId:
+          type: string
+        destinationId:
+          type: string
+        originName:
+          type: string
+        destinationName:
+          type: string
+        savedAt:
+          type: string
+        userId:
+          type: string
+
+    NetworkSummary:
+      type: object
+      required: [totalLines, totalStations, totalInterchanges, activeTrains, averageCrowdLevel, operationalStatus]
+      properties:
+        totalLines:
+          type: integer
+        totalStations:
+          type: integer
+        totalInterchanges:
+          type: integer
+        activeTrains:
+          type: integer
+        averageCrowdLevel:
+          type: string
+          enum: [low, moderate, high]
+        operationalStatus:
+          type: string
+
+    SignupInput:
+      type: object
+      required: [name, email, password]
+      properties:
+        name:
+          type: string
+          minLength: 2
+        email:
+          type: string
+        password:
+          type: string
+          minLength: 8
+
+    LoginInput:
+      type: object
+      required: [email, password]
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+
+    AuthUser:
+      type: object
+      required: [id, name, email, createdAt]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        createdAt:
+          type: string
+        rewardPoints:
+          type: integer

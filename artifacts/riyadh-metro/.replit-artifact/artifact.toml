@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Riyadh Metro"
+version = "1.0.0"
+id = "artifacts/riyadh-metro"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24155
+
+[services.development]
+run = "pnpm --filter @workspace/riyadh-metro run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/riyadh-metro", "run", "build" ]
+publicDir = "artifacts/riyadh-metro/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24155"
+BASE_PATH = "/"

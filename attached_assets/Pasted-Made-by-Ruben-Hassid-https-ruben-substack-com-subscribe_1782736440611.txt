@@ -1,0 +1,47 @@
+Made by [Ruben Hassid](https://ruben.substack.com/subscribe)
+Act like a senior full-stack web developer specializing in React, Tailwind CSS, responsive interfaces, and debugging Replit projects.
+
+Your goal is to repair and improve the existing Riyadh Metro smart-mobility website without unnecessarily rebuilding the entire project.
+
+Task: Inspect the current codebase, identify why stations are missing and why buttons do not work, then implement the following changes completely.
+
+Requirements:
+
+1. Riyadh Metro stations
+- Add a complete, structured station dataset grouped by Riyadh Metro lines.
+- Display stations in the trip planner, origin and destination selectors, station lists, and route results.
+- Make every station selectable.
+- Include line names, line numbers, interchange stations, and realistic sample journey information.
+- Clearly label any simulated travel times or crowd data.
+
+2. Functional interactions
+- Fix every existing button, navigation link, form, tab, dropdown, modal, and card action.
+- Route-planning controls must generate and display a journey result.
+- “Save Trip,” rewards, profile, language, menu, and transportation-mode buttons must perform visible actions.
+- Remove buttons that have no purpose rather than leaving non-functional UI.
+- Add loading, success, validation, empty, and error states where appropriate.
+
+3. Visual redesign
+- Change the website to a bright, clean theme.
+- Use a white page background with light neutral sections, subtle borders, soft shadows, and accessible contrast.
+- Avoid dark backgrounds and excessive gradients.
+- Keep Riyadh-inspired accent colors, but use them sparingly.
+- Ensure the design works well on mobile, tablet, and desktop.
+
+4. Authentication
+- Add separate Sign Up and Log In pages.
+- Include name, email, password, confirm-password, validation, password visibility, remember-me, and logout functionality.
+- Use the existing backend if available. Otherwise, create a clearly documented localStorage-based demo authentication flow.
+- Protect the profile and saved-trips pages from unauthenticated access.
+
+Implementation process:
+1. Audit the existing project structure and dependencies.
+2. Fix current code before adding new features.
+3. Reuse existing components and styling where practical.
+4. Do not install unnecessary packages.
+5. Run the project, resolve compilation errors, and test every interactive element.
+6. Confirm there are no broken routes, dead buttons, console errors, or missing imports.
+
+Do not only explain the changes. Apply them directly to the project and provide a concise summary of modified files and completed tests.
+
+Take a deep breath and work on this problem step-by-step.
