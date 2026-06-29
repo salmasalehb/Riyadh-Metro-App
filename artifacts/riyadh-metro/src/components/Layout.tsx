@@ -1,6 +1,6 @@
 import { Link, useLocation } from "wouter";
 import { ReactNode } from "react";
-import { Train, Map, MapPin, Bookmark, User as UserIcon } from "lucide-react";
+import { Train, Map, MapPin, Bookmark, User as UserIcon, Gift } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
 export function Layout({ children }: { children: ReactNode }) {
@@ -12,6 +12,7 @@ export function Layout({ children }: { children: ReactNode }) {
     { href: "/planner", label: "Plan Trip", icon: Map },
     { href: "/stations", label: "Stations", icon: MapPin },
     { href: "/saved-trips", label: "Saved", icon: Bookmark, protected: true },
+    { href: "/rewards", label: "Rewards", icon: Gift, protected: true },
     { href: "/profile", label: "Profile", icon: UserIcon, protected: true },
   ];
 

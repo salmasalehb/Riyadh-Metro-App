@@ -1,0 +1,35 @@
+Made by [Ruben Hassid](https://ruben.substack.com/subscribe)
+Act like a senior full-stack React developer specializing in authentication state, persistent user data, and debugging Replit applications.
+
+Your goal is to update the existing Riyadh Metro website without changing its current design or any features that already work correctly.
+
+Task: Inspect the existing codebase and implement these two improvements directly.
+
+1. Connect authentication data to the Profile page
+- Remove all hardcoded profile information, including the sample name “Ahmed Al-Rash” and sample email.
+- After a user signs up, save their name, email, account creation date, preferences, and unique user ID using the project’s existing database or authentication system.
+- After sign-in, load the currently authenticated user’s information and display it automatically on the Profile page.
+- Show the correct initials inside the profile avatar.
+- New users should start with zero trips unless trip data already exists.
+- Ensure profile edits made through “Save Changes” update the same user record and remain visible after refreshing or signing in again.
+- Ensure signing out clears the active session and does not display the previous user’s information.
+- Use the existing backend when available. If this project currently uses localStorage-based demo authentication, implement the same behavior securely within that existing structure.
+
+2. Fix reward redemption behavior
+- When the user clicks “Redeem,” validate that the reward is still available.
+- Generate or retrieve the redemption code and display it clearly in the existing modal or confirmation interface.
+- After the code is displayed, mark that reward as redeemed and remove its card from the available Rewards page.
+- Persist the redeemed reward ID per user so the reward remains hidden after refreshing, signing out, and signing back in.
+- Prevent duplicate redemption caused by repeated clicks.
+- Deduct reward points only if the existing application already supports a points balance.
+- Do not remove or hide other rewards.
+
+Implementation rules:
+- Preserve the current layout, colors, navigation, and working features.
+- Reuse the existing state-management, database, and component structure.
+- Do not create duplicate authentication systems.
+- Fix all TypeScript, import, routing, and runtime errors.
+- Test sign-up, sign-in, profile updates, refresh persistence, sign-out, redemption, and duplicate-click prevention.
+- Apply the changes directly instead of only explaining them.
+
+Take a deep breath and work on this problem step-by-step.

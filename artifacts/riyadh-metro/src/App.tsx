@@ -16,6 +16,7 @@ import SavedTrips from "@/pages/saved-trips";
 import Login from "@/pages/login";
 import Signup from "@/pages/signup";
 import Profile from "@/pages/profile";
+import Rewards from "@/pages/rewards";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -59,6 +60,10 @@ function Router() {
           {(params) => <ProtectedRoute component={Profile} params={params} />}
         </Route>
         
+        <Route path="/rewards">
+          {(params) => <ProtectedRoute component={Rewards} params={params} />}
+        </Route>
+
         <Route path="/login" component={Login} />
         <Route path="/signup" component={Signup} />
         
